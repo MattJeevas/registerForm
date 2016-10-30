@@ -25,11 +25,12 @@
 		// Информация отсылается к скрипту, который обрабатывает ее в базе данных.
 		// и выдает ответ. 
 		$("#submitButton").on("click", function(){
+			var save = $("#agree").attr("checked") == 'checked' ? true : false;
 		    $.ajax({
 		    	method: "POST",
 		    	url: "ajax.php",
 				// Описание использования параметра data в файле ajax.php.
-		    	data: {type: "login", login: $("#loginField").val(), password: $("#passwordField").val()},
+		    	data: {type: "login", login: $("#loginField").val(), password: $("#passwordField").val(), save: save},
 		    	success: function(returnVal){
 					$("#resultSpan").text("");
 					switch(returnVal){
@@ -155,6 +156,9 @@
 				<label for="login">Пароль: </label>
 				<input id="passwordField" name="password" type = "password" size="20" maxlength="20">
             </li>
+			<li>			
+			    <input id="rememberMe" name="remember" type = "checkbox" value = "1" checked>Запомнить меня
+			</li>
             <li>			
 			    <input id="submitButton" name="submit" type = "button" value = "Войти">
 				<input id="registrationButton" name="registration" type = "button" value = "Зарегистрироваться">

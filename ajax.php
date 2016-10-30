@@ -69,6 +69,11 @@
 		            $_SESSION['login'] = $userRow['login']; 
 		            $_SESSION['id'] = $userRow['id'];
 				    $_SESSION['password'] = $userRow['password'];
+					if ($_POST['save']) {
+                        //Если пользователь хочет, чтобы его данные сохранились для    последующего входа, то сохраняем в куках его браузера
+                        setcookie("login",    $_POST["login"], time()+9999999);
+                        setcookie("password",    $_POST["password"], time()+9999999);
+					}
 				    unset($login);
 				    unset($password);
 		            echo "SUCCESS";
