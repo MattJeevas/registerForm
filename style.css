@@ -1,0 +1,92 @@
+.hidden {
+	display: none;
+}
+/* Так как стили задаются самостоятельно, необходимость в очерчивании элемента ввода
+   при наведении отпадает */
+:focus {
+    outline: 0;
+}
+/* Типографские шрифты */
+body {
+	font: 14px/21px "Lucida Sans", "Lucida Grande", "Lucida Sans Unicode", sans-serif;
+}
+.formTitle h2, .regForm label, .logForm label {
+	font-family:Georgia, Times, "Times New Roman", serif;
+}
+.formHint, .requiredNote {
+	font-size: 11px;
+}
+/* Настройка того, чтобы все элементы были упорядочены */
+.regForm ul, .logForm ul {
+    width:750px;
+    list-style-type:none;
+    list-style-position:outside;
+    margin:0px;
+    padding:0px;
+}
+/* Разделяет элементы между собой */
+.regForm li, .logForm li{
+    padding:12px;
+    border-bottom:1px solid #eee;
+    position:relative;
+}
+/* Добавляет подчеркивание, выделяющее форму */
+.regForm li:first-child, .regForm li:last-child , .logForm li:first-child, .logForm li:last-child{
+    border-bottom:1px solid #000;
+}
+/* Настройка заголовка */
+.regForm h2 {
+    margin:0;
+    display: inline;
+}
+/* Настройка положения сообщения о том, что поля помеченные астериском нуждаются в заполнении */
+.requiredNote {
+    color:#d45252;
+    margin:-5px 0 0 0;
+    display:inline;
+    float:right;
+}
+/* Настройка положения лейбла для полей регистрации */
+.regForm label {
+    width:150px;
+    margin-top: 3px;
+    display:inline-block;
+    float:left;
+    padding:3px;
+}
+/* Настройка элементов ввода */
+.regForm input {
+    padding-right:30px;
+}
+.regForm button, .logForm button {
+	margin-left:156px;
+}
+/* Добавляет астериск во все обязательные поля */
+input:required{
+    background: #fff url(images/required.png) no-repeat 98% center;
+}
+/* Сдвигает астериск, чтобы расположить его ближе к радио кнопкам */
+.regForm img {
+	position:absolute;
+	right: 400px;
+}
+/* Настройка для элемента подсказки, с его помощью видно, что заполнено правильно */
+.formHint {
+    background: #d45252;
+    border-radius: 3px 3px 3px 3px;
+    color: white;
+    margin-left:8px;
+    padding: 1px 6px;
+    z-index: 999; /* Элемент попадает на самый верх */
+    position: absolute;
+    display: none; /* Элемент не будет показан при запуске */
+}
+/* Настройка опции покидания сессии */
+.exitLink {
+	position:absolute;
+	margin-left:10px;
+}
+/* Настройка появления элемента подсказки */
+.regForm input:focus + .formHint {display: inline;}
+.regForm input:required:valid + .formHint {background: #28921f;} 
+.regForm input:required:valid + .formHint::before {color:#28921f;}
