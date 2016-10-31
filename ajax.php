@@ -70,9 +70,10 @@
 		            $_SESSION['id'] = $userRow['id'];
 				    $_SESSION['password'] = $userRow['password'];
 					if ($_POST['save']) {
-                        //Если пользователь хочет, чтобы его данные сохранились для    последующего входа, то сохраняем в куках его браузера
-                        setcookie("login",    $_POST["login"], time()+9999999);
-                        setcookie("password",    $_POST["password"], time()+9999999);
+                        // Если пользователь хочет, чтобы его данные сохранились, то заносим их в куки.
+						// Данный метод небезопасен, так как пароль хранится в куки нешифрованным.
+                        setcookie("login", $_POST["login"], time()+3600);
+                        setcookie("password", $_POST["password"], time()+3600);
 					}
 				    unset($login);
 				    unset($password);
@@ -131,7 +132,12 @@
 		    unset($_SESSION['login']);
 		    unset($_SESSION['password']);
 		    unset($_SESSION['id']);
-		    echo ("SUCCESS");
+		    echo "SUCCESS";
 	    break;
+		default:
+		    // При попадании на страницу по прямой ссылке.
+			echo "Вход на серверную страницу воспрещен.</br>";
+			echo "<a href=\"index.php\">Назад</a>";
+		break;
 }
 ?>

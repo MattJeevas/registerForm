@@ -25,14 +25,14 @@
 		// Информация отсылается к скрипту, который обрабатывает ее в базе данных.
 		// и выдает ответ. 
 		$("#submitButton").on("click", function(){
-			var save = $("#agree").attr("checked") == 'checked' ? true : false;
+			var save = $("#rememberMe").attr("checked") == 'checked' ? 1 : 0;
 		    $.ajax({
 		    	method: "POST",
 		    	url: "ajax.php",
 				// Описание использования параметра data в файле ajax.php.
 		    	data: {type: "login", login: $("#loginField").val(), password: $("#passwordField").val(), save: save},
 		    	success: function(returnVal){
-					$("#resultSpan").text("");
+					$(".resultSpan").text("");
 					switch(returnVal){
 						// Если пришло "SUCCESS", то значит пользователь есть в базе данных
 						// и его перенаправит на страницу для зарегистрированных пользователей.
@@ -41,12 +41,12 @@
 					    break;
 						// Если пришло "NO_SUCH_LOGIN", то значит пользователя нет в базе данных.
 						case "NO_SUCH_LOGIN":
-						    $("#resultSpan").text("Пользователя с предоставленным вами логином не существует.");
+						    $(".resultSpan").text("Пользователя с предоставленным вами логином не существует.");
 					    break;
 						// Если пришло "WRONG_PASSWORD", то значит пользователя есть в базе данных,
 						// но с другим паролем.
 					    case "WRONG_PASSWORD":
-						    $("#resultSpan").text("Введенный вами пароль неверен.");
+						    $(".resultSpan").text("Введенный вами пароль неверен.");
 					    break;
 					}
 				}
@@ -55,8 +55,7 @@
 		// При нажатии на кнопку регистрации скрываем форму входа и показываем форму регистрации.
 		$("#registrationButton").on("click", function(){
 			// В span для описания ошибок выводим пустую строку, чтобы не возникало путаницы.
-			$("#resultSpan").text("");
-			$(".formTitle h2").text("Регистрация");
+			$(".resultSpan").text("");
 			// Удаляем класс hidden у формы регистрации, и добавляем его к форме входа
 			// Данная процедура позволяет обрабатывать регистрацию и ввод на одной странице.
 		    $("#signUpForm").addClass('hidden');
@@ -75,33 +74,32 @@
 		    	data: {type: "registration", login: $("#newLoginField").val(), password: $("#newPasswordField").val(), email: $("#newEmail").val(), city: $("#newCity").val(), sex: $('#registrationForm input[name=sexRadio]:checked').val()},
 		    	success: function(returnVal){
 					// Удаляем любой текст из элемента с информацией по ошибкам.
-					$("#resultSpan").text("");
+					$(".resultSpan").text("");
 					switch(returnVal){
 						// Если вернулся SUCCESS, то регистрация пройдена, возвращаемся к форме входа.
 					    case "SUCCESS":
-						    $(".formTitle  h2").text("Вход");
 							$("#registrationForm").addClass('hidden');
 							$("#signUpForm").removeClass('hidden');
-							$("#resultSpan").text("Поздравляем с регистрацией! Теперь вы можете войти.")
+							$(".resultSpan").text("Поздравляем с регистрацией! Теперь вы можете войти.")
 					    break;
 						// Если вернулся LOGIN_TAKEN, то регистрация невозможна, потому что такой пользователь уже есть.
 						case "LOGIN_TAKEN":
-						    $("#resultSpan").text("Пользователь с предоставленным вами логином уже существует.");
+						    $(".resultSpan").text("Пользователь с предоставленным вами логином уже существует.");
 					    break;
 						// Если вернулся DUPLICATE_IP, то регистрация невозможна, потому что пользователи с одинаковым IP за указанный период времени запрещены.
 					    case "DUPLICATE_IP":
-						    $("#resultSpan").text("Вы пытаетесь произвести регистрацию с IP, зарегистрированного в системе. Множественные аккаунты недопустимы.");
+						    $(".resultSpan").text("Вы пытаетесь произвести регистрацию с IP, зарегистрированного в системе. Множественные аккаунты недопустимы.");
 					    break;
 						// Если вернулся MYSQL_FAILURE, то регистрация невозможна, потому что возникли проблемы с базой данных.
 						case "MYSQL_FAILURE":
-						    $("#resultSpan").text("Возникла ошибка при добавлении новой записи в базу данных. Повторите запрос позднее.");
+						    $(".resultSpan").text("Возникла ошибка при добавлении новой записи в базу данных. Повторите запрос позднее.");
 					    break;
 					}
 				}
 		    });
 			// Если из функции checkData вернулась строка с ошибкой, то выводим ошибку на экран.
 			} else {
-				$("#resultSpan").text(checkResult);
+				$(".resultSpan").text(checkResult);
 			}
 		});
 		// Событие, обеспечивающее выход из сессии.
@@ -122,10 +120,9 @@
 		// Если есть необходимость вернутся к форме входа, то нажатие этой кнопки
 		// скроет форму регистрации и покажет форму входа.
 		$("#backToLogin").on("click", function(){
-		    $(".formTitle  h2").text("Вход");
 			$("#registrationForm").addClass('hidden');
 			$("#signUpForm").removeClass('hidden');
-			$("#resultSpan").text("")
+			$(".resultSpan").text("")
 	    });
 	});
     
@@ -136,25 +133,23 @@
 	    <title>Простая регистрация</title>
 	</head>
 	<body>
-	    <!-- Span для идентификации формы -->
-		<span class="formTitle">
-		    <h2>Вход</h2>
-		</span>
 		<!-- Форма входа на сайт -->
         <div id="signUpForm" class="logForm">
 		<ul>
 		    <li>
+			    <!-- Span для идентификации формы -->
+			    <span class="formTitle"><h2>Вход</h2></span>
 			    <!-- Если пользователь уже вошел, то приветствуем его на сайте. -->
-			    <?php if (isset($_SESSION['login']) && isset($_SESSION['id'])) echo "<label for=\"greet\">С возвращением, ".$_SESSION['login']."!</label><a class = \"exitLink\" href=\"#\">Выйти?</a>";?>
+			    <?php if (isset($_SESSION['login']) && isset($_SESSION['password'])) echo "<label for=\"greet\">С возвращением, ".$_SESSION['login']."!</label><a class = \"exitLink\" href=\"#\">Выйти?</a>";?>
 			</li>
 			<li>
 			    <!-- Если пользователь уже вошел, то приветствуем его на сайте. -->
 				<label for="login">Логин: </label>
-		        <input id="loginField" name="login" type = "text" size="20" maxlength="20">
+		        <input id="loginField" name="login" type = "text" size="20" maxlength="20" value="<?php if (isset($_COOKIE['login'])) echo $_COOKIE['login'];?>">
 			</li>
 			<li>
 				<label for="login">Пароль: </label>
-				<input id="passwordField" name="password" type = "password" size="20" maxlength="20">
+				<input id="passwordField" name="password" type = "password" size="20" maxlength="20" value="<?php if (isset($_COOKIE['password'])) echo $_COOKIE['password'];?>">
             </li>
 			<li>			
 			    <input id="rememberMe" name="remember" type = "checkbox" value = "1" checked>Запомнить меня
@@ -163,6 +158,10 @@
 			    <input id="submitButton" name="submit" type = "button" value = "Войти">
 				<input id="registrationButton" name="registration" type = "button" value = "Зарегистрироваться">
 			</li>
+			<li> 
+		        <!-- Поля в которое выводится информация по ошибкам -->
+		        <span class="resultSpan"></span>
+		    </li>
 		</ul>
 		</div>
 		<!-- Форма регистрации на сайте -->
@@ -170,6 +169,8 @@
 		<div id="registrationForm" class="hidden regForm">
 		<ul>
 		    <li>
+			    <!-- Span для идентификации формы -->
+			    <span class="formTitle"><h2>Регистрация</h2></span>
 		        <span class="requiredNote">Поля помеченные '*' обязательны для заполнения.</span>
 		    </li>
 			<li>
@@ -206,8 +207,10 @@
 			    <input id="submitRegButton" name="submit" type = "button" value = "Зарегистрироваться">
 				<input id="backToLogin" name="backToL" type = "button" value = "Назад">
 		    </li>
+			<li> 
+		        <!-- Поля в которое выводится информация по ошибкам -->
+		        <span class="resultSpan"></span>
+		    </li>
 		</div>
-		<!-- Поля в которое выводится информация по ошибкам -->
-		<span id="resultSpan"></span>
 		
 </html>
